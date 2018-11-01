@@ -3,6 +3,10 @@ from collections import *
 import matplotlib.pyplot as plt
 import numpy as np
 
+'''
+Medium sized set works better than small set, which did not
+contain "Category [1-5]".
+'''
 nlp = spacy.load('en_core_web_md')
 
 t0 = time.time()
@@ -44,7 +48,8 @@ Define slots dict to store information
 slots = {}
 
 '''
-Entities expected to be chosen based on most frequent
+Define entities expected to be chosen based on most frequently cited,
+and store them in slots.
 '''
 ent_freq = ['EVENT', 'LOC', 'GPE', 'ORG', 'MONEY']
 
@@ -88,7 +93,7 @@ for item in entsHash['DATE'].items():
             slots['YEAR'] = year
 
 '''
-Choose most frequently cited Category associated with the event
+Choose most frequently cited Category 1-5 associated with the event
 '''
 category = defaultdict(int)
 max_count = 0
@@ -123,6 +128,41 @@ def range_quantities(type):
 slots['RAINFALL'] = range_quantities('inches')
 slots['WINDSPEED'] = range_quantities('mph')
 
+'''
+Finding the number of people evacuated and the number of deaths.
+'''
+def findNN(idx1, indices):
+    v = []
+    for idx2 in indices:
+        diff = idx2 - idx1
+        if diff > 0:
+            v.append(diff)
+    return min(v) if v else 1e10
+
+evacuated_indices = [occurence.start() for occurence in re.finditer('evacuated', sentences)]
+print()
+death_indices = [occurence.start() for occurence in re.finditer('deaths', sentences)]
+
+print(entsHash['CARDINAL'].items())
+
+minDist = 1e10
+maxDist = 300
+mostFreq = defaultdict(int)
+for cardinal in entsHash['CARDINAL'].items():
+    occurences = [occurence.start() for occurence in re.finditer(cardinal[0], sentences)]
+    for occurence in occurences:
+        v = findNN(occurence, evacuated_indices)
+        if v < minDist and v < 30:
+            minDist = v
+            print(cardinal[0])
+            mostFreq[cardinal[0].lower()] += 1
+
+slots['EVAC'] = max(mostFreq.items(), key = lambda x : x[1])[0]
+print(slots['EVAC'])
+print()
+'''
+Construct the summary.
+'''
 print("{} was a {} hurricane that made landfall in {}, {} in {}.".format(slots['EVENT'],
     slots['CATEGORY'], slots['MONTH'], slots['YEAR'], slots['GPE']))
 print("The hurricane traveled through {} with windspeeds that ranged from a low of {} mph to a peak of {} mph.".format(slots['LOC'],
