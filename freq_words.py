@@ -22,6 +22,9 @@ sentences = sentences.translate(translator)
 stopword_set = set(stopwords.words('english'))
 words = filter(lambda word: not word in stopword_set, sentences.split())
 
-fdist = nltk.FreqDist(words)
+freqDist = nltk.FreqDist(words)
 
-print(fdist.most_common(50))
+mostFreqWords = freqDist.most_common(5)
+
+for word, count in mostFreqWords:
+    print(word, count)

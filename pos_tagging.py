@@ -11,10 +11,6 @@ sentences_list = [articles['Sentences'] for articles in data]
 
 sentences = (' ').join(sentences_list)
 
-punctuation = ':;?!.,'
-translator = sentences.maketrans('', '', string.punctuation)
-sentences = sentences.translate(translator)
-
 text_file = open("Output.txt", "w")
 text_file.write(sentences)
 text_file.close()
@@ -22,9 +18,13 @@ text_file.close()
 blob = TextBlob(sentences)
 
 noun_group = ['NN', 'NNS', 'NNP', 'NNPS']
-nouns = [n for n,t in blob.tags if t in noun_group]
-print(nouns[:10])
+nouns = [(noun,tag) for noun,tag in blob.tags if tag in noun_group]
+
+for noun, tag in nouns[:10]:
+    print(noun, tag)
 
 verb_group = ['VB', 'VBD', 'VBG', 'VBN', 'VBP', 'VBZ']
-verbs = [v for v,t in blob.tags if v in verb_group]
-print(verbs[:10])
+verbs = [(v,t) for v,t in blob.tags if t in verb_group]
+
+for verb, tag in verbs[:10]:
+    print(verb, tag)
