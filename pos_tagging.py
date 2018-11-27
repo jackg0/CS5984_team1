@@ -20,11 +20,11 @@ blob = TextBlob(sentences)
 noun_group = ['NN', 'NNS', 'NNP', 'NNPS']
 nouns = [(noun,tag) for noun,tag in blob.tags if tag in noun_group]
 
-for noun, tag in nouns[:10]:
+for noun, tag in nouns[:5]:
     print(noun, tag)
 
 verb_group = ['VB', 'VBD', 'VBG', 'VBN', 'VBP', 'VBZ']
 verbs = [(v,t) for v,t in blob.tags if t in verb_group]
 
-for verb, tag in verbs[:10]:
+for verb, tag in verbs[:5]:
     print(verb, tag)
