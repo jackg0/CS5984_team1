@@ -85,7 +85,7 @@ if __name__ == '__main__':
         print (args)
 
         print ('Incorrect usage of command line: ')
-        print ('python wikipedia-content.py -t <topic> -o <output directory>')
+        print ('python wikipedia_content.py -t <topic> -o <output directory>')
 
 
 
@@ -99,7 +99,7 @@ if __name__ == '__main__':
     for opt, arg in opts:
         print (opt,'\t',arg)
         if opt == '-h':
-            print ('python wikipedia-content.py -t <topic> -o <output directory>')
+            print ('python wikipedia_content.py -t <topic> -o <output directory>')
             sys.exit()
         elif opt in ('-t'):
             topic = arg
